@@ -57,7 +57,7 @@ WORKDIR /python_rtmpstream/python
 RUN pip install .
 
 # Copy the nerfstream application
-COPY ../nerfstream /nerfstream
+COPY nerfstream /nerfstream
 WORKDIR /nerfstream
 
 # Command to run the application
