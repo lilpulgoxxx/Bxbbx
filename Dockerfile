@@ -17,44 +17,30 @@ RUN apt-get update -yq --fix-missing \
     cmake \
     curl \
     git \
-    vim
-
-# Install Miniconda
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh \
-    && bash miniconda.sh -b -u -p /opt/miniconda3 \
-    && rm miniconda.sh \
-    && /opt/miniconda3/bin/conda init
-
-# Set conda environment variables
-ENV PATH="/opt/miniconda3/bin:$PATH"
-ENV CONDA_DEFAULT_ENV=nerfstream
-
-# Create conda environment and activate it
-RUN conda create -n nerfstream python=3.10 -y \
-    && conda activate nerfstream
+    vim \
+    python3-pip \
+    python3-dev \
+    ffmpeg
 
 # Set the pip index URL to Aliyun mirror
-RUN pip config set global.index-url https://mirrors.aliyun.com/pypi/simple/
+RUN pip3 config set global.index-url https://mirrors.aliyun.com/pypi/simple/
 
-# Install dependencies from requirements.txt
+# Copy requirements.txt and install dependencies
 COPY requirements.txt ./
-RUN pip install -r requirements.txt
+RUN pip3 install -r requirements.txt
 
 # Install additional libraries
-RUN pip install "git+https://github.com/facebookresearch/pytorch3d.git"
-RUN pip install tensorflow-gpu==2.8.0
+RUN pip3 install "git+https://github.com/facebookresearch/pytorch3d.git"
+RUN pip3 install tensorflow-gpu==2.8.0
 
 # Install and downgrade protobuf version
-RUN pip uninstall -y protobuf \
-    && pip install protobuf==3.20.1
-
-# Install ffmpeg using conda
-RUN conda install -y ffmpeg
+RUN pip3 uninstall -y protobuf \
+    && pip3 install protobuf==3.20.1
 
 # Copy and install your Python packages
 COPY . .
 WORKDIR /python_rtmpstream/python
-RUN pip install .
+RUN pip3 install .
 
 # Copy the nerfstream application
 COPY . .
