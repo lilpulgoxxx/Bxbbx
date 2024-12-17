@@ -52,7 +52,7 @@ RUN pip uninstall -y protobuf \
 RUN conda install -y ffmpeg
 
 # Copy and install your Python packages
-COPY ../python_rtmpstream /python_rtmpstream
+COPY . .
 WORKDIR /python_rtmpstream/python
 RUN pip install .
 
